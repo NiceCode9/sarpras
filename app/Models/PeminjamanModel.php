@@ -6,41 +6,24 @@ use CodeIgniter\Model;
 
 class PeminjamanModel extends Model
 {
-    protected $table            = 'peminjamen';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $table = 'peminjaman';
+    protected $primaryKey = 'id';
+    protected $allowedFields = ['user_id', 'sarana_id', 'tgl_pinjam', 'tgl_kembali', 'alasan', 'status'];
+    protected $useTimestamps = true;
 
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
+    // Join dengan tabel sarana dan users
+    public function getPeminjamanWithDetails()
+    {
+        return $this->select('peminjaman.*, sarana.nama as nama_sarana, users.nama as nama_user')
+            ->join('sarana', 'sarana.id = peminjaman.sarana_id')
+            ->join('users', 'users.id = peminjaman.user_id')
+            ->orderBy('peminjaman.created_at', 'DESC');
+    }
 
-    protected array $casts = [];
-    protected array $castHandlers = [];
-
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
-
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
-
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    // Untuk user tertentu
+    public function getByUserId($userId)
+    {
+        return $this->getPeminjamanWithDetails()
+            ->where('peminjaman.user_id', $userId);
+    }
 }
