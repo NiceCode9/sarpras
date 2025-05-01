@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Auth::login');
 $routes->get('/login', 'Auth::login');
 $routes->post('/login', 'Auth::login');
+$routes->post('/logout', 'Auth::logout');
 
 
 // Proteksi route untuk yang sudah login
@@ -45,5 +46,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('/laporan', 'Laporan::index');
         $routes->get('/laporan/exportPDF', 'Laporan::exportPDF');
         $routes->get('/laporan/exportExcel', 'Laporan::exportExcel');
+
+        $routes->get('/setting', 'Setting::index');
+        $routes->post('/setting/updateDenda', 'Setting::updateDenda');
     });
 });

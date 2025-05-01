@@ -37,6 +37,7 @@
                             <th>Tanggal</th>
                             <th>Alasan</th>
                             <th>Status</th>
+                            <th>Denda</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -56,6 +57,23 @@
                                                             ?>">
                                         <?= ucfirst($p['status']) ?>
                                     </span>
+                                </td>
+                                <?php
+                                $denda = 0;
+                                $keterangan = null;
+                                $tglKembali = new DateTime($p['tgl_kembali']);
+                                $now = new DateTime();
+                                if ($tglKembali < $now) {
+                                    $selisihHari = $now->diff($tglKembali)->days;
+                                    $denda = $selisihHari * ($setting['denda_per_hari'] ?? 5000);
+                                    $keterangan = "Terlambat $selisihHari hari (Rp" . number_format($setting['denda_per_hari'] ?? 5000) . "/hari)";
+                                }
+                                ?>
+                                <td class="<?= $denda > 0 ? 'text-danger font-weight-bold' : '' ?>">
+                                    <?= $denda > 0 ? 'Rp' . number_format($denda) : '-' ?>
+                                    <?php if ($keterangan): ?>
+                                        <small class="d-block text-muted"><?= $keterangan ?></small>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if ($p['status'] == 'pending'): ?>

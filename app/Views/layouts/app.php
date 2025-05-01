@@ -179,6 +179,12 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a href="<?= base_url('setting') ?>" class="nav-link <?= uri_string() == 'setting' ? 'active' : '' ?>">
+                                    <i class="nav-icon fas fa-cog"></i>
+                                    <p>Pengaturan Sistem</p>
+                                </a>
+                            </li>
 
                         <?php else: ?>
                             <!-- Menu Peminjam -->
@@ -218,10 +224,13 @@
 
                         <!-- Logout -->
                         <li class="nav-item">
-                            <a href="<?= base_url('logout') ?>" class="nav-link">
-                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <a href="<?= base_url('logout') ?>" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt"></i>
                                 <p>Logout</p>
                             </a>
+                            <form id="logout-form" action="<?= base_url('logout') ?>" method="post" style="display: none;">
+                                <?= csrf_field(); ?>
+                            </form>
                         </li>
                     </ul>
                 </nav>

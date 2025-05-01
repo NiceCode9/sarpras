@@ -26,4 +26,12 @@ class PeminjamanModel extends Model
         return $this->getPeminjamanWithDetails()
             ->where('peminjaman.user_id', $userId);
     }
+
+    public function getPeminjamanAkanBerakhir()
+    {
+        return $this->where('status', 'disetujui')
+            ->where('tgl_kembali >=', date('Y-m-d'))
+            ->where('tgl_kembali <=', date('Y-m-d', strtotime('+3 days')))
+            ->findAll();
+    }
 }

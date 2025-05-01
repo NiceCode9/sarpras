@@ -88,6 +88,9 @@ class Peminjaman extends BaseController
             return redirect()->back()->with('error', 'Data peminjaman tidak ditemukan');
         }
 
+        $settingModel = new \App\Models\SettingModel();
+        $dendaPerHari = $settingModel->getValue('denda_per_hari') ?? 5000;
+
         $newStatus = '';
         switch ($action) {
             case 'approve':
@@ -99,9 +102,34 @@ class Peminjaman extends BaseController
                 $this->saranaModel->update($peminjaman['sarana_id'], ['status' => 'tersedia']);
                 break;
             case 'return':
-                $newStatus = 'selesai';
+                $tglKembali = new \DateTime($peminjaman['tgl_kembali']);
+                $tglDikembalikan = new \DateTime(date('Y-m-d'));
+                $denda = 0;
+                $keterangan = null;
+
+                // Hitung denda jika terlambat
+                if ($tglDikembalikan > $tglKembali) {
+                    $selisihHari = $tglDikembalikan->diff($tglKembali)->days;
+                    $denda = $selisihHari * $dendaPerHari;
+                    $keterangan = "Terlambat $selisihHari hari (Rp" . number_format($dendaPerHari) . "/hari)";
+                }
+
+                $this->peminjamanModel->update($id, [
+                    'status' => 'selesai',
+                    'tgl_dikembalikan' => date('Y-m-d'),
+                    'denda' => $denda,
+                    'keterangan_denda' => $keterangan
+                ]);
+
                 // Kembalikan status sarana
                 $this->saranaModel->update($peminjaman['sarana_id'], ['status' => 'tersedia']);
+
+                return redirect()->back()->with(
+                    'success',
+                    $denda > 0
+                        ? "Peminjaman selesai. Denda Rp" . number_format($denda) . " ($keterangan)"
+                        : "Peminjaman selesai tanpa denda"
+                );
                 break;
             default:
                 return redirect()->back()->with('error', 'Aksi tidak valid');
