@@ -29,6 +29,14 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-body">
+                <?php if (session()->getFlashdata('success')): ?>
+                    <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+                <?php endif; ?>
+
+                <?php if (session()->getFlashdata('error')): ?>
+                    <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+                <?php endif; ?>
+
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -84,7 +92,10 @@
                                             <i class="fas fa-times"></i> Tolak
                                         </a>
                                     <?php elseif ($p['status'] == 'disetujui' && $p['tgl_kembali'] >= date('Y-m-d')): ?>
-                                        <a href="<?= base_url("peminjaman/action/{$p['id']}/return") ?>" class="btn btn-sm btn-info">
+                                        <!-- <a href="<?= base_url("peminjaman/action/{$p['id']}/return") ?>" class="btn btn-sm btn-info">
+                                            <i class="fas fa-undo"></i> Tandai Kembali
+                                        </a> -->
+                                        <a href="javascript:void(0)" data-url="<?= base_url("peminjaman/return/{$p['id']}") ?>" class=" btn btn-sm btn-info btn-return" data-toggle="modal" data-target="#staticBackdrop">
                                             <i class="fas fa-undo"></i> Tandai Kembali
                                         </a>
                                     <?php endif; ?>
@@ -96,5 +107,74 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post" id="form-return">
+                    <?= csrf_field(); ?>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="catatan">Catatan</label>
+                            <textarea name="catatan" id="catatan" class="form-control" rows="3" placeholder="Masukkan catatan jika ada"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
 </section>
+
 <?= $this->endSection() ?>
+
+<?= $this->section('scripts'); ?>
+<script>
+    $(document).ready(function() {
+        // $('#staticBackdrop').on('show.bs.modal', function(event) {
+        //     // var url = $('selector').data('url');
+        //     // var form = $('#form-return');
+        //     // form.attr('action', url);
+        //     // form.find('#staticBackdropLabel').text('Tandai Kembali Peminjaman');
+        //     // form.find('#catatan').val('');
+        //     // form.off('submit').on('submit', function(e) {
+        //     //     e.preventDefault();
+        //     //     $.ajax({
+        //     //         url: form.attr('action'),
+        //     //         type: 'POST',
+        //     //         data: form.serialize(),
+        //     //         success: function(response) {
+        //     //             if (response.success) {
+        //     //                 location.reload();
+        //     //             } else {
+        //     //                 alert(response.error);
+        //     //             }
+        //     //         },
+        //     //         error: function() {
+        //     //             alert('Terjadi kesalahan. Silakan coba lagi.');
+        //     //         }
+        //     //     });
+        //     // });
+        // });
+        $(document).on('click', '.btn-return', function() {
+            var url = $(this).data('url');
+            var form = $('#form-return');
+            form.attr('action', url);
+            form.find('#staticBackdropLabel').text('Tandai Kembali Peminjaman');
+            form.find('#catatan').val('');
+        });
+    });
+</script>
+<?= $this->endSection(); ?>

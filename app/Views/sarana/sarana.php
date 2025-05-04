@@ -50,8 +50,7 @@
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="<?= base_url('sarana') ?>">Semua</a>
-                                <a class="dropdown-item" href="<?= base_url('sarana?status=tersedia') ?>">Tersedia</a>
-                                <a class="dropdown-item" href="<?= base_url('sarana?status=dipinjam') ?>">Dipinjam</a>
+                                <a class="dropdown-item" href="<?= base_url('sarana?status=baik') ?>">Baik</a>
                                 <a class="dropdown-item" href="<?= base_url('sarana?status=rusak') ?>">Rusak</a>
                                 <a class="dropdown-item" href="<?= base_url('sarana?status=pemeliharaan') ?>">Pemeliharaan</a>
                             </div>
@@ -70,6 +69,7 @@
                             <th>Nama Sarana</th>
                             <th>Kategori</th>
                             <th>Lokasi</th>
+                            <th>Jumlah</th>
                             <th>Status</th>
                             <th width="15%">Aksi</th>
                         </tr>
@@ -81,9 +81,23 @@
                                 <td><?= $item['nama'] ?></td>
                                 <td><?= ucfirst($item['kategori']) ?></td>
                                 <td><?= $item['lokasi'] ?></td>
+                                <td><?= $item['jumlah']; ?></td>
                                 <td>
-                                    <span class="badge bg-<?=
-                                                            $item['status'] == 'tersedia' ? 'success' : ($item['status'] == 'dipinjam' ? 'info' : ($item['status'] == 'rusak' ? 'danger' : 'warning'))
+                                    <span class="badge bg-<?php
+                                                            switch ($item['status']) {
+                                                                case 'baik':
+                                                                    echo 'success';
+                                                                    break;
+                                                                case 'dipinjam':
+                                                                    echo 'info';
+                                                                    break;
+                                                                case 'rusak':
+                                                                    echo 'danger';
+                                                                    break;
+                                                                default:
+                                                                    echo 'warning';
+                                                                    break;
+                                                            }
                                                             ?>">
                                         <?= ucfirst($item['status']) ?>
                                     </span>

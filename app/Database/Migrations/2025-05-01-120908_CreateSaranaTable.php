@@ -30,8 +30,13 @@ class CreateSaranaTable extends Migration
             ],
             'status' => [
                 'type' => 'ENUM',
-                'constraint' => ['tersedia', 'dipinjam', 'rusak', 'pemeliharaan'],
-                'default' => 'tersedia'
+                'constraint' => ['baik', 'rusak', 'pemeliharaan'],
+                'default' => 'baik'
+            ],
+            'jumlah' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'default' => 0
             ],
             'deskripsi' => [
                 'type' => 'TEXT',

@@ -10,7 +10,6 @@ $routes->get('/login', 'Auth::login');
 $routes->post('/login', 'Auth::login');
 $routes->post('/logout', 'Auth::logout');
 
-
 // Proteksi route untuk yang sudah login
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('/dashboard', 'Dashboard::index');
@@ -28,6 +27,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('/peminjaman/create', 'Peminjaman::create');
     $routes->get('/peminjaman/admin', 'Peminjaman::admin');
     $routes->get('/peminjaman/action/(:num)/(:any)', 'Peminjaman::action/$1/$2');
+    $routes->post('/peminjaman/return/(:num)', 'Peminjaman::return/$1');
 
     // Pemeliharaan Routes
     $routes->get('/pemeliharaan', 'Pemeliharaan::index');

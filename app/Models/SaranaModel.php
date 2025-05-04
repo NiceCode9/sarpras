@@ -8,7 +8,7 @@ class SaranaModel extends Model
 {
     protected $table = 'sarana';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama', 'kategori', 'lokasi', 'status', 'deskripsi'];
+    protected $allowedFields = ['nama', 'kategori', 'lokasi', 'status', 'jumlah', 'deskripsi'];
     protected $useTimestamps = true;
 
     public function search($keyword)

@@ -51,7 +51,8 @@ class Sarana extends BaseController
             'nama' => 'required|min_length[3]',
             'kategori' => 'required',
             'lokasi' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'jumlah' => 'required',
         ];
 
         if ($this->validate($rules)) {
@@ -59,6 +60,7 @@ class Sarana extends BaseController
                 'nama' => $this->request->getPost('nama'),
                 'kategori' => $this->request->getPost('kategori'),
                 'lokasi' => $this->request->getPost('lokasi'),
+                'jumlah' => $this->request->getPost('jumlah'),
                 'status' => $this->request->getPost('status'),
                 'deskripsi' => $this->request->getPost('deskripsi')
             ]);
@@ -88,7 +90,8 @@ class Sarana extends BaseController
             'nama' => 'required|min_length[3]',
             'kategori' => 'required',
             'lokasi' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'jumlah' => 'required',
         ];
 
         if ($this->validate($rules)) {
@@ -97,6 +100,7 @@ class Sarana extends BaseController
                 'nama' => $this->request->getPost('nama'),
                 'kategori' => $this->request->getPost('kategori'),
                 'lokasi' => $this->request->getPost('lokasi'),
+                'jumlah' => $this->request->getPost('jumlah'),
                 'status' => $this->request->getPost('status'),
                 'deskripsi' => $this->request->getPost('deskripsi')
             ]);

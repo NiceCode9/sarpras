@@ -21,7 +21,7 @@ class Peminjaman extends BaseController
     {
         $data = [
             'title' => 'Peminjaman Sarana',
-            'saranaTersedia' => $this->saranaModel->where('status', 'tersedia')->findAll(),
+            'saranaTersedia' => $this->saranaModel->where('jumlah !=', 0)->findAll(),
             'riwayat' => $this->peminjamanModel->getByUserId(session()->get('id'))->findAll()
         ];
 
@@ -118,7 +118,8 @@ class Peminjaman extends BaseController
                     'status' => 'selesai',
                     'tgl_dikembalikan' => date('Y-m-d'),
                     'denda' => $denda,
-                    'keterangan_denda' => $keterangan
+                    'keterangan_denda' => $keterangan,
+                    'catatan' => $this->request->getPost('catatan')
                 ]);
 
                 // Kembalikan status sarana
@@ -138,5 +139,46 @@ class Peminjaman extends BaseController
         $this->peminjamanModel->update($id, ['status' => $newStatus]);
 
         return redirect()->back()->with('success', 'Status peminjaman berhasil diperbarui');
+    }
+
+    public function return($id)
+    {
+        $peminjaman = $this->peminjamanModel->find($id);
+        if (!$peminjaman) {
+            return redirect()->back()->with('error', 'Data peminjaman tidak ditemukan');
+        }
+
+        $dendaPerHari = 5000; // Ganti dengan nilai denda per hari yang sesuai
+
+        $tglKembali = new \DateTime($peminjaman['tgl_kembali']);
+        $tglDikembalikan = new \DateTime(date('Y-m-d'));
+        $denda = 0;
+        $keterangan = null;
+
+        // Hitung denda jika terlambat
+        if ($tglDikembalikan > $tglKembali) {
+            $selisihHari = $tglDikembalikan->diff($tglKembali)->days;
+            $denda = $selisihHari * $dendaPerHari;
+            $keterangan = "Terlambat $selisihHari hari (Rp" . number_format($dendaPerHari) . "/hari)";
+        }
+
+        // Update status peminjaman dan kembalikan sarana
+        $this->peminjamanModel->update($id, [
+            'status' => 'selesai',
+            'tgl_dikembalikan' => date('Y-m-d'),
+            'denda' => $denda,
+            'keterangan_denda' => $keterangan,
+            'catatan' => $this->request->getPost('catatan')
+        ]);
+
+        // Kembalikan status sarana
+        // $this->saranaModel->update($peminjaman['sarana_id'], ['status' => 'tersedia']);
+
+        return redirect()->back()->with(
+            'success',
+            $denda > 0
+                ? "Peminjaman selesai. Denda Rp" . number_format($denda) . " ($keterangan)"
+                : "Peminjaman selesai tanpa denda"
+        );
     }
 }

@@ -39,6 +39,10 @@ class CreatePeminjamanTable extends Migration
                 'constraint' => ['pending', 'disetujui', 'ditolak', 'selesai'],
                 'default' => 'pending'
             ],
+            'catatan' => [
+                'type' => 'TEXT',
+                'null' => true
+            ],
             'created_at' => [
                 'type' => 'TIMESTAMP',
                 'null' => true

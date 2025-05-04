@@ -279,6 +279,8 @@
     <script src="<?= base_url('writable/') ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="<?= base_url('writable/') ?>assets/dist/js/adminlte.min.js"></script>
+
+    <?= $this->renderSection('scripts'); ?>
 </body>
 
 </html>

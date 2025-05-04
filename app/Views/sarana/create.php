@@ -48,11 +48,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="jumlah">Jumlah</label>
+                        <input type="number" name="jumlah" id="jumlah" class="form-control"
+                            value="<?= isset($sarana) ? $sarana['jumlah'] : old('jumlah') ?>" required>
+                    </div>
+
+                    <div class="form-group">
                         <label for="status">Status</label>
                         <select name="status" id="status" class="form-control" required>
                             <option value="">Pilih Status</option>
-                            <option value="tersedia" <?= (isset($sarana) && $sarana['status'] == 'tersedia') ? 'selected' : '' ?>>Tersedia</option>
-                            <option value="dipinjam" <?= (isset($sarana) && $sarana['status'] == 'dipinjam') ? 'selected' : '' ?>>Dipinjam</option>
+                            <option value="baik" <?= (isset($sarana) && $sarana['status'] == 'baik') ? 'selected' : '' ?>>Baik</option>
                             <option value="rusak" <?= (isset($sarana) && $sarana['status'] == 'rusak') ? 'selected' : '' ?>>Rusak</option>
                             <option value="pemeliharaan" <?= (isset($sarana) && $sarana['status'] == 'pemeliharaan') ? 'selected' : '' ?>>Pemeliharaan</option>
                         </select>
