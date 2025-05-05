@@ -100,6 +100,7 @@
                             <th>Sarana</th>
                             <th>Tanggal Pinjam</th>
                             <th>Tanggal Kembali</th>
+                            <th>Jumlah Pinjam</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -112,8 +113,24 @@
                                 <td><?= date('d M Y', strtotime($item['tgl_pinjam'])) ?></td>
                                 <td><?= date('d M Y', strtotime($item['tgl_kembali'])) ?></td>
                                 <td>
-                                    <span class="badge bg-<?=
-                                                            $item['status'] == 'disetujui' ? 'success' : ($item['status'] == 'pending' ? 'warning' : 'danger')
+                                    <?= $item['jumlah_pinjam']; ?>
+                                </td>
+                                <td>
+                                    <span class="badge bg-<?php
+                                                            switch ($item['status']) {
+                                                                case 'disetujui':
+                                                                    echo 'success';
+                                                                    break;
+                                                                case 'pending':
+                                                                    echo 'warning';
+                                                                    break;
+                                                                case 'selesai':
+                                                                    echo 'info';
+                                                                    break;
+                                                                case 'ditolak':
+                                                                    echo 'danger';
+                                                                    break;
+                                                            }
                                                             ?>">
                                         <?= ucfirst($item['status']) ?>
                                     </span>

@@ -16,7 +16,7 @@ class AddDendaToPeminjaman extends Migration
                 'after' => 'status'
             ],
             'tgl_dikembalikan' => [
-                'type' => 'DATE',
+                'type' => 'DATETIME',
                 'null' => true,
                 'after' => 'tgl_kembali'
             ],

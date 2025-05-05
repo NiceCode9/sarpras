@@ -8,7 +8,7 @@ class PeminjamanModel extends Model
 {
     protected $table = 'peminjaman';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['user_id', 'sarana_id', 'tgl_pinjam', 'tgl_kembali', 'alasan', 'status', 'catatan'];
+    protected $allowedFields = ['user_id', 'sarana_id', 'tgl_pinjam', 'tgl_kembali', 'jumlah_pinjam', 'alasan', 'status', 'catatan'];
     protected $useTimestamps = true;
 
     // Join dengan tabel sarana dan users

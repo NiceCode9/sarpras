@@ -31,7 +31,7 @@ class Sarana extends BaseController
 
         $data = [
             'title' => 'Manajemen Sarana',
-            'sarana' => $query->paginate(10),
+            'sarana' => $query->paginate(10, 'sarana'),
             'pager' => $this->saranaModel->pager,
             'statusFilter' => $status,
             'searchKeyword' => $keyword

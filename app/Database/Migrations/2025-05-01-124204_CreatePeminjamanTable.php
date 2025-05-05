@@ -26,10 +26,10 @@ class CreatePeminjamanTable extends Migration
                 'unsigned' => true
             ],
             'tgl_pinjam' => [
-                'type' => 'DATE'
+                'type' => 'DATETIME'
             ],
             'tgl_kembali' => [
-                'type' => 'DATE'
+                'type' => 'DATETIME'
             ],
             'alasan' => [
                 'type' => 'TEXT'

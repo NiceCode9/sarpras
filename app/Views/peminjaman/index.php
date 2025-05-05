@@ -20,36 +20,52 @@
                         <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
                     <?php endif; ?>
 
-                    <?php if (isset($errors)): ?>
+                    <?php if (session()->getFlashdata('errors')): ?>
                         <div class="alert alert-danger">
-                            <?php foreach ($errors as $error): ?>
-                                <p><?= $error ?></p>
-                            <?php endforeach; ?>
+                            <ul>
+                                <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                                    <li><?= $error; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
                         </div>
                     <?php endif; ?>
 
                     <div class="form-group">
                         <label>Sarana</label>
-                        <select name="sarana_id" class="form-control" required>
+                        <select name="sarana_id" class="form-control select2" required>
                             <option value="">Pilih Sarana</option>
                             <?php foreach ($saranaTersedia as $sarana): ?>
                                 <option value="<?= $sarana['id'] ?>">
-                                    <?= $sarana['nama'] ?> (<?= $sarana['kategori'] ?>)
+                                    <?= $sarana['nama'] ?> (<?= $sarana['kategori'] ?>) - <?= $sarana['jumlah'] ?> Tersedia
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Tanggal Pinjam</label>
-                        <input type="date" name="tgl_pinjam" class="form-control" required
-                            min="<?= date('Y-m-d') ?>">
+                        <label>Tanggal Pinjam:</label>
+                        <div class="input-group date" id="tgl_pinjam" data-target-input="nearest">
+                            <input type="text" name="tgl_pinjam" class="form-control datetimepicker-input" data-target="#tgl_pinjam" min="<?= date('Y-m-d H:i:s') ?>" />
+                            <div class="input-group-append" data-target="#tgl_pinjam" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Tanggal Kembali</label>
-                        <input type="date" name="tgl_kembali" class="form-control" required
-                            min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+                        <label>Tanggal Kembali:</label>
+                        <div class="input-group date" id="tgl_kembali" data-target-input="nearest">
+                            <input type="text" name="tgl_kembali" class="form-control datetimepicker-input" data-target="#tgl_kembali" min="<?= date('Y-m-d H:i:s') ?>" />
+                            <div class="input-group-append" data-target="#tgl_kembali" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jumlah">Jumlah</label>
+                        <input type="number" name="jumlah_pinjam" class="form-control" required
+                            min="1">
                     </div>
 
                     <div class="form-group">
@@ -75,6 +91,7 @@
                         <tr>
                             <th>Sarana</th>
                             <th>Tanggal</th>
+                            <th>Jumlah</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -83,12 +100,26 @@
                             <tr>
                                 <td><?= $p['nama_sarana'] ?></td>
                                 <td>
-                                    <?= date('d M Y', strtotime($p['tgl_pinjam'])) ?><br>
-                                    s/d <?= date('d M Y', strtotime($p['tgl_kembali'])) ?>
+                                    <?= date('d M Y H:i:s', strtotime($p['tgl_pinjam'])) ?><br>
+                                    s/d <?= date('d M Y H:i:s', strtotime($p['tgl_kembali'])) ?>
                                 </td>
+                                <td><?= $p['jumlah_pinjam']; ?></td>
                                 <td>
-                                    <span class="badge bg-<?=
-                                                            $p['status'] == 'disetujui' ? 'success' : ($p['status'] == 'pending' ? 'warning' : 'danger')
+                                    <span class="badge bg-<?php
+                                                            switch ($p['status']) {
+                                                                case 'disetujui':
+                                                                    echo 'success';
+                                                                    break;
+                                                                case 'pending':
+                                                                    echo 'warning';
+                                                                    break;
+                                                                case 'selesai':
+                                                                    echo 'info';
+                                                                    break;
+                                                                case 'ditolak':
+                                                                    echo 'danger';
+                                                                    break;
+                                                            }
                                                             ?>">
                                         <?= ucfirst($p['status']) ?>
                                     </span>
@@ -101,4 +132,17 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?>
+<?= $this->endSection('content') ?>
+
+<?= $this->section('scripts'); ?>
+<script>
+    $(document).ready(function() {
+        $('#tgl_pinjam, #tgl_kembali').datetimepicker({
+            icons: {
+                time: 'far fa-clock'
+            },
+            locale: 'ru'
+        });
+    });
+</script>
+<?= $this->endSection('scripts'); ?>

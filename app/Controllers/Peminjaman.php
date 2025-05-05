@@ -21,7 +21,7 @@ class Peminjaman extends BaseController
     {
         $data = [
             'title' => 'Peminjaman Sarana',
-            'saranaTersedia' => $this->saranaModel->where('jumlah !=', 0)->findAll(),
+            'saranaTersedia' => $this->saranaModel->where('jumlah !=', 0)->where('status !=', 'pemeliharaan')->findAll(),
             'riwayat' => $this->peminjamanModel->getByUserId(session()->get('id'))->findAll()
         ];
 
@@ -59,15 +59,41 @@ class Peminjaman extends BaseController
             $tglPinjam = strtotime($this->request->getPost('tgl_pinjam'));
             $tglKembali = strtotime($this->request->getPost('tgl_kembali'));
 
+            if ($this->saranaModel->where('id', $this->request->getPost('sarana_id'))->first()['jumlah'] <= $this->request->getPost('jumlah')) {
+                return redirect()->back()->withInput()->with('errors', ['sarana_id' => 'Jumlah sarana tidak mencukupi']);
+            }
+
             if ($tglKembali <= $tglPinjam) {
                 return redirect()->back()->withInput()->with('errors', ['tgl_kembali' => 'Tanggal kembali harus setelah tanggal pinjam']);
             }
+
+            $tglPinjamVal = \DateTime::createFromFormat('m/d/Y h:i A', $this->request->getPost('tgl_pinjam'));
+            $tglKembaliVal = \DateTime::createFromFormat('m/d/Y h:i A', $this->request->getPost('tgl_kembali'));
+
+            $existingBookings = $this->peminjamanModel
+                ->where('sarana_id', $this->request->getPost('sarana_id'))
+                ->where('status !=', 'ditolak')
+                ->where('status !=', 'selesai')
+                ->where('tgl_pinjam <=', $tglKembaliVal->format('Y-m-d H:i:s'))
+                ->where('tgl_kembali >=', $tglPinjamVal->format('Y-m-d H:i:s'))
+                ->findAll();
+
+            if (!empty($existingBookings)) {
+                return redirect()->back()->withInput()->with('errors', [
+                    'tgl_pinjam' => 'Sarana sudah dipinjam pada rentang waktu yang dipilih'
+                ]);
+            }
+
+            $tglPinjamFormatted = $tglPinjamVal->format('Y-m-d H:i:s');
+            $tglKembaliFormated = $tglKembaliVal->format('Y-m-d H:i:s');
+
             $this->peminjamanModel->save([
                 'user_id' => session()->get('id'),
                 'sarana_id' => $this->request->getPost('sarana_id'),
-                'tgl_pinjam' => $this->request->getPost('tgl_pinjam'),
-                'tgl_kembali' => $this->request->getPost('tgl_kembali'),
+                'tgl_pinjam' => $tglPinjamFormatted,
+                'tgl_kembali' => $tglKembaliFormated,
                 'alasan' => $this->request->getPost('alasan'),
+                'jumlah_pinjam' => $this->request->getPost('jumlah_pinjam'),
                 'status' => 'pending'
             ]);
 
@@ -95,6 +121,9 @@ class Peminjaman extends BaseController
         switch ($action) {
             case 'approve':
                 $newStatus = 'disetujui';
+                $sarpras = $this->saranaModel->find($peminjaman['sarana_id']);
+                $total = $sarpras['jumlah'] - $peminjaman['jumlah_pinjam'];
+                $this->saranaModel->update($peminjaman['sarana_id'], ['jumlah' => $total]);
                 break;
             case 'reject':
                 $newStatus = 'ditolak';
@@ -148,7 +177,7 @@ class Peminjaman extends BaseController
             return redirect()->back()->with('error', 'Data peminjaman tidak ditemukan');
         }
 
-        $dendaPerHari = 5000; // Ganti dengan nilai denda per hari yang sesuai
+        $dendaPerHari = 5000;
 
         $tglKembali = new \DateTime($peminjaman['tgl_kembali']);
         $tglDikembalikan = new \DateTime(date('Y-m-d'));
@@ -161,6 +190,10 @@ class Peminjaman extends BaseController
             $denda = $selisihHari * $dendaPerHari;
             $keterangan = "Terlambat $selisihHari hari (Rp" . number_format($dendaPerHari) . "/hari)";
         }
+
+        $sarana = $this->saranaModel->find($peminjaman['sarana_id']);
+        $stock = $sarana['jumlah'] + $peminjaman['jumlah_pinjam'];
+        $this->saranaModel->update($peminjaman['sarana_id'], ['jumlah' => $stock]);
 
         // Update status peminjaman dan kembalikan sarana
         $this->peminjamanModel->update($id, [

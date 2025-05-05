@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\PeminjamanModel;
 use App\Models\SaranaModel;
+use Dompdf\Dompdf;
 
 class Laporan extends BaseController
 {
@@ -46,7 +47,7 @@ class Laporan extends BaseController
             'end_date' => $endDate
         ];
 
-        $dompdf = new \Dompdf\Dompdf();
+        $dompdf = new Dompdf();
         $dompdf->loadHtml(view('laporan/export_pdf', $data));
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();

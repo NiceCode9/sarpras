@@ -37,73 +37,90 @@
                     <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
                 <?php endif; ?>
 
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Peminjam</th>
-                            <th>Sarana</th>
-                            <th>Tanggal</th>
-                            <th>Alasan</th>
-                            <th>Status</th>
-                            <th>Denda</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($peminjaman as $p): ?>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-nowrap">
+                        <thead>
                             <tr>
-                                <td><?= $p['nama_user'] ?></td>
-                                <td><?= $p['nama_sarana'] ?></td>
-                                <td>
-                                    <?= date('d M Y', strtotime($p['tgl_pinjam'])) ?><br>
-                                    s/d <?= date('d M Y', strtotime($p['tgl_kembali'])) ?>
-                                </td>
-                                <td><?= $p['alasan'] ?></td>
-                                <td>
-                                    <span class="badge bg-<?=
-                                                            $p['status'] == 'disetujui' ? 'success' : ($p['status'] == 'pending' ? 'warning' : 'danger')
-                                                            ?>">
-                                        <?= ucfirst($p['status']) ?>
-                                    </span>
-                                </td>
-                                <?php
-                                $denda = 0;
-                                $keterangan = null;
-                                $tglKembali = new DateTime($p['tgl_kembali']);
-                                $now = new DateTime();
-                                if ($tglKembali < $now) {
-                                    $selisihHari = $now->diff($tglKembali)->days;
-                                    $denda = $selisihHari * ($setting['denda_per_hari'] ?? 5000);
-                                    $keterangan = "Terlambat $selisihHari hari (Rp" . number_format($setting['denda_per_hari'] ?? 5000) . "/hari)";
-                                }
-                                ?>
-                                <td class="<?= $denda > 0 ? 'text-danger font-weight-bold' : '' ?>">
-                                    <?= $denda > 0 ? 'Rp' . number_format($denda) : '-' ?>
-                                    <?php if ($keterangan): ?>
-                                        <small class="d-block text-muted"><?= $keterangan ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($p['status'] == 'pending'): ?>
-                                        <a href="<?= base_url("peminjaman/action/{$p['id']}/approve") ?>" class="btn btn-sm btn-success">
-                                            <i class="fas fa-check"></i> Setujui
-                                        </a>
-                                        <a href="<?= base_url("peminjaman/action/{$p['id']}/reject") ?>" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-times"></i> Tolak
-                                        </a>
-                                    <?php elseif ($p['status'] == 'disetujui' && $p['tgl_kembali'] >= date('Y-m-d')): ?>
-                                        <!-- <a href="<?= base_url("peminjaman/action/{$p['id']}/return") ?>" class="btn btn-sm btn-info">
+                                <th>Peminjam</th>
+                                <th>Sarana</th>
+                                <th>Tanggal</th>
+                                <th>Jumlah Pinjam</th>
+                                <th>Alasan</th>
+                                <th>Status</th>
+                                <th>Denda</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($peminjaman as $p): ?>
+                                <tr>
+                                    <td><?= $p['nama_user'] ?></td>
+                                    <td><?= $p['nama_sarana'] ?></td>
+                                    <td>
+                                        <?= date('d M Y H:i:s', strtotime($p['tgl_pinjam'])) ?><br>
+                                        s/d <?= date('d M Y H:i:s', strtotime($p['tgl_kembali'])) ?>
+                                    </td>
+                                    <td><?= $p['jumlah_pinjam']; ?></td>
+                                    <td><?= $p['alasan'] ?></td>
+                                    <td>
+                                        <span class="badge bg-<?php
+                                                                switch ($p['status']) {
+                                                                    case 'disetujui':
+                                                                        echo 'success';
+                                                                        break;
+                                                                    case 'pending':
+                                                                        echo 'warning';
+                                                                        break;
+                                                                    case 'selesai':
+                                                                        echo 'info';
+                                                                        break;
+                                                                    case 'ditolak':
+                                                                        echo 'danger';
+                                                                        break;
+                                                                }
+                                                                ?>">
+                                            <?= ucfirst($p['status']) ?>
+                                        </span>
+                                    </td>
+                                    <?php
+                                    $denda = 0;
+                                    $keterangan = null;
+                                    $tglKembali = new DateTime($p['tgl_kembali']);
+                                    $now = new DateTime();
+                                    if ($tglKembali < $now) {
+                                        $selisihHari = $now->diff($tglKembali)->days;
+                                        $denda = $selisihHari * ($setting['denda_per_hari'] ?? 5000);
+                                        $keterangan = "Terlambat $selisihHari hari (Rp" . number_format($setting['denda_per_hari'] ?? 5000) . "/hari)";
+                                    }
+                                    ?>
+                                    <td class="<?= $denda > 0 ? 'text-danger font-weight-bold' : '' ?>">
+                                        <?= $denda > 0 ? 'Rp' . number_format($denda) : '-' ?>
+                                        <?php if ($keterangan): ?>
+                                            <small class="d-block text-muted"><?= $keterangan ?></small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($p['status'] == 'pending'): ?>
+                                            <a href="<?= base_url("peminjaman/action/{$p['id']}/approve") ?>" class="btn btn-sm btn-success">
+                                                <i class="fas fa-check"></i> Setujui
+                                            </a>
+                                            <a href="<?= base_url("peminjaman/action/{$p['id']}/reject") ?>" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-times"></i> Tolak
+                                            </a>
+                                        <?php elseif ($p['status'] == 'disetujui' && $p['tgl_kembali'] >= date('Y-m-d')): ?>
+                                            <!-- <a href="<?= base_url("peminjaman/action/{$p['id']}/return") ?>" class="btn btn-sm btn-info">
                                             <i class="fas fa-undo"></i> Tandai Kembali
                                         </a> -->
-                                        <a href="javascript:void(0)" data-url="<?= base_url("peminjaman/return/{$p['id']}") ?>" class=" btn btn-sm btn-info btn-return" data-toggle="modal" data-target="#staticBackdrop">
-                                            <i class="fas fa-undo"></i> Tandai Kembali
-                                        </a>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                            <a href="javascript:void(0)" data-url="<?= base_url("peminjaman/return/{$p['id']}") ?>" class=" btn btn-sm btn-info btn-return" data-toggle="modal" data-target="#staticBackdrop">
+                                                <i class="fas fa-undo"></i> Tandai Kembali
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

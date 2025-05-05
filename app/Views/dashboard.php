@@ -20,7 +20,7 @@
                     <div class="icon">
                         <i class="fas fa-school"></i>
                     </div>
-                    <a href="<?= base_url('sarana') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    <!-- <a href="<?= base_url('sarana') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
                 </div>
             </div>
 
@@ -33,7 +33,7 @@
                     <div class="icon">
                         <i class="fas fa-times-circle"></i>
                     </div>
-                    <a href="<?= base_url('sarana?status=rusak') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    <!-- <a href="<?= base_url('sarana?status=rusak') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
                     <div class="icon">
                         <i class="fas fa-clipboard-list"></i>
                     </div>
-                    <a href="<?= base_url('peminjaman') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    <!-- <a href="<?= base_url('peminjaman') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
                 </div>
             </div>
 
@@ -59,7 +59,7 @@
                     <div class="icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <a href="<?= base_url('pengguna') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    <!-- <a href="<?= base_url('pengguna') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
                 </div>
             </div>
         </div>

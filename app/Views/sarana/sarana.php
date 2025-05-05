@@ -24,9 +24,11 @@
             <div class="card-header">
                 <h3 class="card-title">Daftar Sarana Prasarana</h3>
                 <div class="card-tools">
-                    <a href="<?= base_url('sarana/create') ?>" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Tambah Sarana
-                    </a>
+                    <?php if (session()->get('role') == 'admin'): ?>
+                        <a href="<?= base_url('sarana/create') ?>" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Tambah Sarana
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="card-body">
@@ -75,9 +77,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php
+                        $currentPage = $pager->getCurrentPage('sarana');
+                        $perPage = $pager->getPerPage('sarana');
+                        $startNumber = ($currentPage - 1) * $perPage + 1;
+                        ?>
                         <?php foreach ($sarana as $key => $item) : ?>
                             <tr>
-                                <td><?= $key + 1 ?></td>
+                                <td><?= $startNumber++ ?></td>
                                 <td><?= $item['nama'] ?></td>
                                 <td><?= ucfirst($item['kategori']) ?></td>
                                 <td><?= $item['lokasi'] ?></td>
@@ -121,7 +128,7 @@
                 </table>
 
                 <div class="mt-3">
-                    <?= $pager->links('btcorona', 'bootstrap_pagination') ?>
+                    <?= $pager->links('sarana', 'bootstrap_pagination') ?>
                 </div>
             </div>
         </div>
