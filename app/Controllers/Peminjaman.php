@@ -198,7 +198,7 @@ class Peminjaman extends BaseController
         // Update status peminjaman dan kembalikan sarana
         $this->peminjamanModel->update($id, [
             'status' => 'selesai',
-            'tgl_dikembalikan' => date('Y-m-d'),
+            'tgl_dikembalikan' => date('Y-m-d H:i:s'),
             'denda' => $denda,
             'keterangan_denda' => $keterangan,
             'catatan' => $this->request->getPost('catatan')

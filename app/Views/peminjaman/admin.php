@@ -45,6 +45,7 @@
                                 <th>Sarana</th>
                                 <th>Tanggal</th>
                                 <th>Jumlah Pinjam</th>
+                                <th>Tanggal Dikembalikan</th>
                                 <th>Alasan</th>
                                 <th>Status</th>
                                 <th>Denda</th>
@@ -61,6 +62,7 @@
                                         s/d <?= date('d M Y H:i:s', strtotime($p['tgl_kembali'])) ?>
                                     </td>
                                     <td><?= $p['jumlah_pinjam']; ?></td>
+                                    <td><?= date('d M Y H:i:s', strtotime($p['tgl_dikembalikan'])) ?></td>
                                     <td><?= $p['alasan'] ?></td>
                                     <td>
                                         <span class="badge bg-<?php
@@ -94,9 +96,21 @@
                                     }
                                     ?>
                                     <td class="<?= $denda > 0 ? 'text-danger font-weight-bold' : '' ?>">
-                                        <?= $denda > 0 ? 'Rp' . number_format($denda) : '-' ?>
-                                        <?php if ($keterangan): ?>
+                                        <?php if ($p['status'] == 'disetujui'): ?>
+                                            <?= $denda > 0 ? 'Rp' . number_format($denda) : '-' ?>
+                                            <?php if ($keterangan): ?>
+                                                <small class="d-block text-muted"><?= $keterangan ?></small>
+                                            <?php endif; ?>
+                                        <?php elseif ($p['status'] == 'selesai'): ?>
+                                            <?php
+                                            $tglDikembalikan = new DateTime($p['tgl_dikembalikan']);
+                                            $selisihHari = $tglDikembalikan->diff($tglKembali)->days;
+                                            $keterangan = "Terlambat $selisihHari hari (Rp" . number_format($setting['denda_per_hari'] ?? 5000) . "/hari)";
+                                            ?>
+                                            <?= $p['denda'] > 0 ? 'Rp' . number_format($p['denda']) : '-' ?>
                                             <small class="d-block text-muted"><?= $keterangan ?></small>
+                                        <?php else: ?>
+                                            -
                                         <?php endif; ?>
                                     </td>
                                     <td>

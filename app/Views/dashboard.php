@@ -3,118 +3,147 @@
 <?= $this->section('content') ?>
 <div class="content-header">
     <div class="container-fluid">
-        <h1 class="m-0">Dashboard</h1>
+        <h1 class="m-0">Dashboard <?= $role == 'admin' ? 'Admin' : 'Peminjam' ?></h1>
     </div>
 </div>
 
 <section class="content">
     <div class="container-fluid">
-        <!-- Small Boxes -->
+        <!-- Widget Utama -->
         <div class="row">
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3><?= $total_sarana ?></h3>
-                        <p>Total Sarana</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-school"></i>
-                    </div>
-                    <!-- <a href="<?= base_url('sarana') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
+            <?php if ($role == 'admin'): ?>
+                <!-- Widget Admin -->
+                <div class="col-lg-3 col-6">
+                    <a href="<?= base_url('sarana') ?>" class="small-box-link">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3><?= $total_sarana ?></h3>
+                                <p>Total Sarana</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-school"></i>
+                            </div>
+                            <div class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></div>
+                        </div>
+                    </a>
                 </div>
+
+                <div class="col-lg-3 col-6">
+                    <a href="<?= base_url('sarana?status=rusak') ?>" class="small-box-link">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3><?= $sarana_rusak ?></h3>
+                                <p>Sarana Rusak</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></div>
+                        </div>
+                    </a>
+                </div>
+            <?php endif; ?>
+
+            <!-- Widget untuk Semua Role -->
+            <div class="col-lg-3 col-6">
+                <a href="<?= $role == 'admin' ? base_url('peminjaman/admin') : base_url('peminjaman') ?>" class="small-box-link">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3><?= $role == 'admin' ? $total_peminjaman : $total_peminjaman_saya ?></h3>
+                            <p><?= $role == 'admin' ? 'Total Peminjaman' : 'Peminjaman Saya' ?></p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></div>
+                    </div>
+                </a>
             </div>
 
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3><?= $sarana_rusak ?></h3>
-                        <p>Sarana Rusak</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
-                    <!-- <a href="<?= base_url('sarana?status=rusak') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
+            <?php if ($role == 'peminjam'): ?>
+                <!-- Widget Khusus Peminjam -->
+                <div class="col-lg-3 col-6">
+                    <a href="<?= base_url('peminjaman?status=disetujui') ?>" class="small-box-link">
+                        <div class="small-box bg-primary">
+                            <div class="inner">
+                                <h3><?= $peminjaman_aktif ?></h3>
+                                <p>Peminjaman Aktif</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3><?= $total_peminjaman ?></h3>
-                        <p>Total Peminjaman</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <!-- <a href="<?= base_url('peminjaman') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
+            <?php else: ?>
+                <!-- Widget Khusus Admin -->
+                <div class="col-lg-3 col-6">
+                    <a href="<?= base_url('pengguna') ?>" class="small-box-link">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3><?= $total_users ?></h3>
+                                <p>Pengguna Terdaftar</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3><?= $total_users ?></h3>
-                        <p>Pengguna Terdaftar</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <!-- <a href="<?= base_url('pengguna') ?>" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a> -->
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
 
-        <!-- Grafik Peminjaman -->
-        <!-- Di bagian grafik dashboard -->
-        <div class="row">
+        <!-- Grafik dan Tabel -->
+        <div class="row mt-4">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Statistik Peminjaman 6 Bulan Terakhir</h3>
                     </div>
                     <div class="card-body">
-                        <canvas id="peminjamanChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        <canvas id="peminjamanChart"></canvas>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Perbandingan Bulanan</h3>
+                        <h3 class="card-title"><?= $role == 'admin' ? 'Peminjaman Terbaru' : 'Aktivitas Terakhir' ?></h3>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="info-box bg-info">
-                                    <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Bulan Ini</span>
-                                        <span class="info-box-number"><?= $current_month_peminjaman ?></span>
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: <?=
-                                                                                    ($previous_month_peminjaman > 0) ?
-                                                                                        ($current_month_peminjaman / $previous_month_peminjaman) * 100 : 100
-                                                                                    ?>%"></div>
-                                        </div>
-                                        <span class="progress-description">
-                                            <?=
-                                            ($previous_month_peminjaman > 0) ?
-                                                round(($current_month_peminjaman / $previous_month_peminjaman) * 100, 2) : 100
-                                            ?>% dari bulan lalu
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="info-box bg-success">
-                                    <span class="info-box-icon"><i class="far fa-calendar"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Bulan Lalu</span>
-                                        <span class="info-box-number"><?= $previous_month_peminjaman ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <?php if ($role == 'admin'): ?>
+                                        <th>Peminjam</th>
+                                    <?php endif; ?>
+                                    <th>Sarana</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($peminjaman_terbaru as $p): ?>
+                                    <tr onclick="window.location='<?= $role == 'admin' ? base_url('peminjaman/admin') : base_url('peminjaman') ?>'" style="cursor:pointer">
+                                        <?php if ($role == 'admin'): ?>
+                                            <td><?= $p['nama_user'] ?></td>
+                                        <?php endif; ?>
+                                        <td><?= $p['nama_sarana'] ?></td>
+                                        <td><?= date('d M Y', strtotime($p['tgl_pinjam'])) ?></td>
+                                        <td>
+                                            <span class="badge bg-<?=
+                                                                    $p['status'] == 'disetujui' ? 'info' : ($p['status'] == 'pending' ? 'warning' : ($p['status'] == 'dibatalkan' ? 'danger' : 'success'))
+                                                                    ?>">
+                                                <?= ucfirst($p['status']) ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -141,31 +170,56 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: true,
                         position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: function(context) {
+                                return 'Klik untuk lihat laporan';
+                            }
+                        }
                     }
                 },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Bulan'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Jumlah'
-                        }
+                onClick: function(evt, elements) {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const month = this.data.labels[index].split(' ')[0];
+                        const year = this.data.labels[index].split(' ')[1];
+                        const startDate = `01-${month}-${year}`;
+                        const endDate = new Date(year, new Date(`${month} 1, 2012`).getMonth() + 1, 0).getDate();
+
+                        window.location.href = `<?= base_url('laporan') ?>?start_date=${startDate}&end_date=${endDate}-${month}-${year}`;
                     }
                 }
             }
         });
     });
 </script>
+
+<style>
+    .small-box-link {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .small-box-link:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .small-box-link:hover .small-box {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+    }
+
+    .info-box:hover {
+        transform: translateY(-3px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
 <?= $this->endSection() ?>

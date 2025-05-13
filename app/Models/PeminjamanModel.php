@@ -8,7 +8,7 @@ class PeminjamanModel extends Model
 {
     protected $table = 'peminjaman';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['user_id', 'sarana_id', 'tgl_pinjam', 'tgl_kembali', 'jumlah_pinjam', 'alasan', 'status', 'catatan'];
+    protected $allowedFields = ['user_id', 'sarana_id', 'tgl_pinjam', 'tgl_kembali', 'denda', 'tgl_dikembalikan', 'jumlah_pinjam', 'alasan', 'status', 'catatan'];
     protected $useTimestamps = true;
 
     // Join dengan tabel sarana dan users
@@ -33,5 +33,43 @@ class PeminjamanModel extends Model
             ->where('tgl_kembali >=', date('Y-m-d'))
             ->where('tgl_kembali <=', date('Y-m-d', strtotime('+3 days')))
             ->findAll();
+    }
+
+    public function calculateDenda($peminjaman_id)
+    {
+        $peminjaman = $this->find($peminjaman_id);
+
+        if ($peminjaman && $peminjaman['status'] == 'disetujui' && empty($peminjaman['tgl_dikembalikan'])) {
+            $tgl_kembali = strtotime($peminjaman['tgl_kembali']);
+            $today = time();
+
+            if ($today > $tgl_kembali) {
+                $diff = $today - $tgl_kembali;
+                $days_late = floor($diff / (60 * 60 * 24));
+
+                // Denda Rp 10.000 per hari keterlambatan
+                $denda = $days_late * 10000;
+
+                $this->update($peminjaman_id, ['denda' => $denda]);
+                return $denda;
+            }
+        }
+
+        return 0;
+    }
+
+    public function getTotalDenda($start_date = null, $end_date = null)
+    {
+        $builder = $this->selectSum('denda');
+
+        if ($start_date) {
+            $builder->where('tgl_pinjam >=', $start_date);
+        }
+
+        if ($end_date) {
+            $builder->where('tgl_pinjam <=', $end_date);
+        }
+
+        return $builder->get()->getRow()->denda ?? 0;
     }
 }
