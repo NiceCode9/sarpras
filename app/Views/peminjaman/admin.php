@@ -49,6 +49,7 @@
                                 <th>Alasan</th>
                                 <th>Status</th>
                                 <th>Denda</th>
+                                <th>Catatan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -113,6 +114,7 @@
                                             -
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= $p['catatan'] ?? '-'; ?></td>
                                     <td>
                                         <?php if ($p['status'] == 'pending'): ?>
                                             <a href="<?= base_url("peminjaman/action/{$p['id']}/approve") ?>" class="btn btn-sm btn-success">

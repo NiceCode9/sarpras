@@ -33,9 +33,13 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('logout') ?>" role="button">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <a href="<?= base_url('logout') ?>" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <p>Logout</p>
                     </a>
+                    <form id="logout-form" action="<?= base_url('logout') ?>" method="post" style="display: none;">
+                        <?= csrf_field(); ?>
+                    </form>
                 </li>
             </ul>
         </nav>
