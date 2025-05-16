@@ -148,6 +148,82 @@
                 </div>
             </div>
         </div>
+
+        <?php if ($role == 'peminjam'): ?>
+            <!-- Calendar Section -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Kalender Peminjaman Saya</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="calendar" style="min-height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FullCalendar CSS -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+
+            <!-- FullCalendar JS -->
+            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const calendarEl = document.getElementById('calendar');
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        locale: 'id',
+                        initialView: 'dayGridMonth',
+                        events: <?= $events ?>,
+                        eventClick: function(info) {
+                            const status = info.event.extendedProps.status;
+                            const alasan = info.event.extendedProps.alasan;
+
+                            Swal.fire({
+                                title: info.event.title,
+                                html: `
+                    <p><strong>Status:</strong> <span class="badge bg-${status == 'disetujui' ? 'success' : (status == 'pending' ? 'warning' : 'danger')}">${status}</span></p>
+                    <p><strong>Tanggal:</strong> ${info.event.start.toLocaleDateString()} - ${new Date(info.event.end).toLocaleDateString()}</p>
+                    <p><strong>Alasan:</strong> ${alasan}</p>
+                `,
+                                showCloseButton: true,
+                                showConfirmButton: false
+                            });
+                        },
+                        headerToolbar: {
+                            left: 'prev,next today addButton',
+                            center: 'title',
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        },
+                        customButtons: {
+                            addButton: {
+                                text: '+ Ajukan',
+                                click: function() {
+                                    window.location.href = '<?= base_url('peminjaman') ?>';
+                                }
+                            }
+                        },
+                        eventDidMount: function(info) {
+                            // Tooltip
+                            $(info.el).tooltip({
+                                title: `
+                    <strong>${info.event.title}</strong><br>
+                    ${info.event.start.toLocaleDateString()} - ${new Date(info.event.end).toLocaleDateString()}
+                `,
+                                html: true,
+                                placement: 'top',
+                                trigger: 'hover'
+                            });
+                        }
+                    });
+                    calendar.render();
+                });
+            </script>
+        <?php endif; ?>
     </div>
 </section>
 

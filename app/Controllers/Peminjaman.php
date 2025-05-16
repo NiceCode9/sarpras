@@ -59,7 +59,7 @@ class Peminjaman extends BaseController
             $tglPinjam = strtotime($this->request->getPost('tgl_pinjam'));
             $tglKembali = strtotime($this->request->getPost('tgl_kembali'));
 
-            if ($this->saranaModel->where('id', $this->request->getPost('sarana_id'))->first()['jumlah'] <= $this->request->getPost('jumlah')) {
+            if ($this->saranaModel->where('id', $this->request->getPost('sarana_id'))->first()['jumlah'] <= $this->request->getPost('jumlah_pinjam')) {
                 return redirect()->back()->withInput()->with('errors', ['sarana_id' => 'Jumlah sarana tidak mencukupi']);
             }
 

@@ -157,10 +157,10 @@
                                 <label>Status</label>
                                 <select name="status" class="form-control">
                                     <option value="">Semua Status</option>
-                                    <option value="pending" <?= $status == 'pending' ? 'selected' : '' ?>>Pending</option>
-                                    <option value="disetujui" <?= $status == 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
-                                    <option value="ditolak" <?= $status == 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
-                                    <option value="selesai" <?= $status == 'selesai' ? 'selected' : '' ?>>Selesai</option>
+                                    <option value="pending" <?= $status === 'pending' ? 'selected' : '' ?>>Pending</option>
+                                    <option value="disetujui" <?= $status === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
+                                    <option value="ditolak" <?= $status === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
+                                    <option value="selesai" <?= $status === 'selesai' ? 'selected' : '' ?>>Selesai</option>
                                 </select>
                             </div>
                         </div>
@@ -477,7 +477,6 @@
                 </span>
             </div>
         </div>
-    </div>
     </div>
 </section>
 

@@ -59,6 +59,7 @@ class Dashboard extends BaseController
         // Data khusus peminjam
         else {
             $userId = session()->get('id');
+            // Data khusus peminjam
             $data += [
                 'total_peminjaman_saya' => $this->peminjamanModel->where('user_id', $userId)->countAllResults(),
                 'peminjaman_aktif' => $this->peminjamanModel
@@ -71,7 +72,8 @@ class Dashboard extends BaseController
                     ->join('sarana', 'sarana.id = peminjaman.sarana_id')
                     ->where('user_id', $userId)
                     ->orderBy('peminjaman.created_at', 'DESC')
-                    ->findAll(5)
+                    ->findAll(5),
+                'events' => $this->getPeminjamanCalendarEvents($userId)
             ];
         }
 
@@ -98,5 +100,41 @@ class Dashboard extends BaseController
             'labels' => $labels,
             'data' => $data
         ];
+    }
+
+    private function getPeminjamanCalendarEvents($userId)
+    {
+        $peminjamans = $this->peminjamanModel
+            ->select('peminjaman.*, sarana.nama as sarana_name')
+            ->join('sarana', 'sarana.id = peminjaman.sarana_id')
+            ->where('peminjaman.status', 'disetujui')
+            ->where('user_id', $userId)
+            ->findAll();
+
+        $events = [];
+        foreach ($peminjamans as $p) {
+            $color = '';
+            if ($p['status'] == 'disetujui') {
+                $color = '#28a745';
+            } elseif ($p['status'] == 'pending') {
+                $color = '#ffc107';
+            } else {
+                $color = '#dc3545';
+            }
+
+            $events[] = [
+                'title' => $p['sarana_name'] . ' (' . ucfirst($p['status']) . ')',
+                'start' => $p['tgl_pinjam'],
+                'end' => date('Y-m-d', strtotime($p['tgl_kembali'] . ' +1 day')),
+                'backgroundColor' => $color,
+                'borderColor' => $color,
+                'extendedProps' => [
+                    'status' => $p['status'],
+                    'alasan' => $p['alasan']
+                ]
+            ];
+        }
+
+        return json_encode($events);
     }
 }

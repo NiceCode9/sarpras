@@ -63,7 +63,7 @@
                                         s/d <?= date('d M Y H:i:s', strtotime($p['tgl_kembali'])) ?>
                                     </td>
                                     <td><?= $p['jumlah_pinjam']; ?></td>
-                                    <td><?= date('d M Y H:i:s', strtotime($p['tgl_dikembalikan'])) ?></td>
+                                    <td><?= $p['tgl_dikembalikan'] ? date('d M Y H:i:s', strtotime($p['tgl_dikembalikan'])) : '-' ?></td>
                                     <td><?= $p['alasan'] ?></td>
                                     <td>
                                         <span class="badge bg-<?php

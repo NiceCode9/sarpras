@@ -72,6 +72,8 @@ class Laporan extends BaseController
             }
         }
 
+        // dd($status_counts);
+
         // Chart data
         $chart_data = $this->getChartData($year);
 

@@ -17,6 +17,25 @@
     <link rel="stylesheet" href="<?= base_url('writable/') ?>assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('writable/') ?>assets/dist/css/adminlte.min.css">
+
+    <style>
+        .fc-event {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .fc-event:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #calendar {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
