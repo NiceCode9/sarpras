@@ -15,6 +15,12 @@ class AddDendaToPeminjaman extends Migration
                 'default' => 0,
                 'after' => 'status'
             ],
+            'denda_lain' => [
+                'type' => 'DECIMAL',
+                'constraint' => '10,2',
+                'default' => 0,
+                'after' => 'denda'
+            ],
             'tgl_dikembalikan' => [
                 'type' => 'DATETIME',
                 'null' => true,

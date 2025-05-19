@@ -200,6 +200,7 @@ class Peminjaman extends BaseController
             'status' => 'selesai',
             'tgl_dikembalikan' => date('Y-m-d H:i:s'),
             'denda' => $denda,
+            'denda_lain' => $this->request->getPost('denda_lain'),
             'keterangan_denda' => $keterangan,
             'catatan' => $this->request->getPost('catatan')
         ]);

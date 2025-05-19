@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="<?= base_url('writable/') ?>assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('writable/') ?>assets/dist/css/adminlte.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?= base_url('writable/') ?>assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url('writable/') ?>assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 
     <style>
         .fc-event {
@@ -313,6 +316,12 @@
     <script src="<?= base_url('writable/'); ?>assets/plugins/moment/moment.min.js"></script>
     <script src="<?= base_url('writable/'); ?>assets/plugins/inputmask/jquery.inputmask.min.js"></script>
     <script src="<?= base_url('writable/'); ?>assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="<?= base_url('writable/'); ?>assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url('writable/'); ?>assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="<?= base_url('writable/'); ?>assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="<?= base_url('writable/'); ?>assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="<?= base_url('writable/'); ?>assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
 
     <script>
         $('.select2').select2({

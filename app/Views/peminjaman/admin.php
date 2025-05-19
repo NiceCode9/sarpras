@@ -38,7 +38,7 @@
                 <?php endif; ?>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped text-nowrap">
+                    <table class="table table-bordered table-striped text-nowrap datatable">
                         <thead>
                             <tr>
                                 <th>Peminjam</th>
@@ -48,7 +48,8 @@
                                 <th>Tanggal Dikembalikan</th>
                                 <th>Alasan</th>
                                 <th>Status</th>
-                                <th>Denda</th>
+                                <th>Denda Keteralambatan</th>
+                                <th>Denda Lainnya</th>
                                 <th>Catatan</th>
                                 <th>Aksi</th>
                             </tr>
@@ -114,6 +115,9 @@
                                             -
                                         <?php endif; ?>
                                     </td>
+                                    <td class="<?= $p['denda_lain'] > 0 ? 'text-danger font-weight-bold' : '' ?>">
+                                        <?= $p['denda_lain'] > 0 ?  'Rp' . number_format($p['denda_lain']) : '-'; ?>
+                                    </td>
                                     <td><?= $p['catatan'] ?? '-'; ?></td>
                                     <td>
                                         <?php if ($p['status'] == 'pending'): ?>
@@ -123,11 +127,8 @@
                                             <a href="<?= base_url("peminjaman/action/{$p['id']}/reject") ?>" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-times"></i> Tolak
                                             </a>
-                                        <?php elseif ($p['status'] == 'disetujui' && $p['tgl_kembali'] >= date('Y-m-d')): ?>
-                                            <!-- <a href="<?= base_url("peminjaman/action/{$p['id']}/return") ?>" class="btn btn-sm btn-info">
-                                            <i class="fas fa-undo"></i> Tandai Kembali
-                                        </a> -->
-                                            <a href="javascript:void(0)" data-url="<?= base_url("peminjaman/return/{$p['id']}") ?>" class=" btn btn-sm btn-info btn-return" data-toggle="modal" data-target="#staticBackdrop">
+                                        <?php elseif ($p['status'] == 'disetujui'): ?>
+                                            <a href="javascript:void(0)" data-url="<?= base_url("peminjaman/return/{$p['id']}") ?>" class="btn btn-sm btn-info btn-return" data-toggle="modal" data-target="#staticBackdrop">
                                                 <i class="fas fa-undo"></i> Tandai Kembali
                                             </a>
                                         <?php endif; ?>
@@ -155,6 +156,10 @@
                     <?= csrf_field(); ?>
                     <div class="modal-body">
                         <div class="form-group">
+                            <label for="denda_lain">Denda Lainnya</label>
+                            <input type="number" class="form-control" name="denda_lain" value="0">
+                        </div>
+                        <div class="form-group">
                             <label for="catatan">Catatan</label>
                             <textarea name="catatan" id="catatan" class="form-control" rows="3" placeholder="Masukkan catatan jika ada"></textarea>
                         </div>
@@ -176,6 +181,10 @@
 <?= $this->section('scripts'); ?>
 <script>
     $(document).ready(function() {
+        $('.datatable').DataTable({
+            "responsive": true,
+            "autoWidth": false,
+        });
         // $('#staticBackdrop').on('show.bs.modal', function(event) {
         //     // var url = $('selector').data('url');
         //     // var form = $('#form-return');
