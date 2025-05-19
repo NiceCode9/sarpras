@@ -21,7 +21,8 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="<?= base_url() ?>" class="h1"><b>Admin</b>LTE</a>
+                <img src="<?= base_url('writable/assets/logo.jpg') ?>" class="img-fluid" width="100px;" alt=""><br>
+                <a href="<?= base_url() ?>" class="h1"><b>SMK SiP</b></a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>

@@ -149,7 +149,15 @@ class Laporan extends BaseController
         ];
 
         $dompdf = new Dompdf();
-        $dompdf->loadHtml(view('laporan/export_pdf', $data));
+
+        // Tambahkan konfigurasi untuk gambar
+        $options = $dompdf->getOptions();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf->setOptions($options);
+
+        $html = view('laporan/export_pdf', $data);
+        $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
         $dompdf->stream('laporan-peminjaman.pdf', ['Attachment' => true]);
